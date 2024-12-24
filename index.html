@@ -1,10 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Carattere&family=Galada&family=Honk&family=Send+Flowers&family=Yesteryear&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeschenkEltern</title>
 </head>
+
+<style>
+
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9;
+  }
+
+  /* From Uiverse.io by mi-series */
+  .container {
+    margin: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .form_area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #34A65F;
+    height: auto;
+    width: auto;
+    border: 2px solid #264143;
+    border-radius: 20px;
+    box-shadow: 3px 4px 0px 1px #0F8A5F;
+  }
+
+  .title {
+    color: #8b0000;
+    font-weight: 900;
+    font-size: 1.5em;
+    margin-top: 20px;
+  }
+
+  .sub_title {
+    font-weight: 600;
+    margin: 5px 0;
+  }
+
+  .form_group {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    margin: 10px;
+  }
+
+  .form_style {
+    outline: none;
+    border: 2px solid #264143;
+    box-shadow: 3px 4px 0px 1px #0F8A5F;
+    width: 290px;
+    padding: 12px 10px;
+    border-radius: 4px;
+    font-size: 15px;
+  }
+
+  .form_style:focus, .btn:focus {
+    transform: translateY(4px);
+    box-shadow: 1px 2px 0px 0px #0F8A5F;
+  }
+
+  .btn {
+    padding: 15px;
+    margin: 25px 0px;
+    width: 290px;
+    font-size: 15px;
+    background: #CC231E;
+    border-radius: 10px;
+    font-weight: 800;
+    box-shadow: 3px 3px 0px 0px #0F8A5F;
+  }
+
+  .btn:hover {
+    opacity: .9;
+  }
+
+  .link {
+    font-weight: 800;
+    color: #264143;
+    padding: 5px;
+  }
+
+
+  /* Pop-up-Stile */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  .popup-content h2 {
+    margin: 0 0 10px;
+  }
+  .popup-content button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  @keyframes upthenscale {
+    0% {
+      transform: translateY(250px);
+    }
+
+    50% {
+      transform: translateY(0);
+    }
+
+    60% {
+      height: 100px;
+      width: 90px;
+      transform: translateY(0);
+    }
+
+    100% {
+      height:  300px;
+      width: 300px;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scalethendown {
+    0% {
+      height:  250px;
+      width: 100%;
+      transform: translateY(0);
+    }
+
+    50% {
+      height: 100px;
+      width: 90px;
+      transform: translateY(0);
+    }
+
+    60% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(250px);
+    }
+  }
+
+  @keyframes waitfade {
+    0%, 50% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes wiggle {
+    0% {
+      transform: translateY(310px) rotate(0);
+    }
+
+    25% {
+      transform: translateY(310px) rotate(2deg);
+    }
+
+    50% {
+      transform: translateY(310px) rotate(0deg);
+    }
+
+    75% {
+      transform: translateY(310px) rotate(-2deg);
+    }
+
+    100% {
+      transform: translateY(310px) rotate(0);
+    }
+  }
+
+
+  .letter {
+    margin: 150px auto;
+    max-width: 350px;
+    height: 375px;
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+
+  .letter--open .paper {
+    animation-name: upthenscale;
+    animation-duration: .6s;
+    animation-fill-mode: forwards;
+  }
+
+  .letter--close .paper {
+    animation-name: scalethendown;
+    animation-duration: .4s;
+    animation-fill-mode: forwards;
+  }
+
+  .letter--open .paper-content {
+    animation-name: waitfade;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+  }
+
+  .letter--open .envelope {
+    animation: pause;
+  }
+
+  .paper-content {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    padding: 25px;
+    opacity: 0;
+  }
+
+  .paper {
+    height: 50px;
+    width: 90px;
+    background: #34A65F;
+    transform: translateY(250px);
+    margin: 0 auto;
+    transition: transform 0.3s 0.1s ease;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .envelope {
+    width: 94px;
+    height: 60px;
+    background: #f36363;
+    position: relative;
+    margin: auto;
+    z-index: 2;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: box-shadow 0.3s ease;
+    transform: translateY(310px);
+    animation: wiggle 0.3s 0.2s infinite;
+    &:hover {
+      animation: pause;
+      & .envelope-paper {
+        transform: translateY(-20px);
+      }
+      & .envelope-flap {
+        transform: translateY(-45px);
+      }
+      & .envelope-detail::after {
+        visibility: hidden;
+      }
+    }
+  }
+
+  .envelope-paper {
+    height: 50px;
+    width: 90px;
+    background: #34A65F;
+    transform: translateY(0);
+    margin: 0 auto;
+    transition: transform 0.3s 0.1s ease;
+    border-radius: 2px;
+    position: absolute;
+    border: 2px solid transparent;
+  }
+
+  .letter--open .envelope-paper {
+    visibility: hidden;
+  }
+
+  .letter--open .envelope-detail::after {
+    visibility: hidden;
+  }
+
+
+  .letter--close .envelope-paper {
+    visibility: hidden;
+  }
+
+  .envelope-flap {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 45px solid transparent;
+    border-right: 45px solid transparent;
+    border-bottom: 45px solid #f36363;
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto;
+    transform: translateY(0);
+  }
+
+  .letter--open .envelope-flap {
+    transform: translateY(-45px);
+  }
+
+  .letter--open .envelope-detail {
+    border-top: 2px solid #e25b5b;
+  }
+
+  .envelope-detail {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+    background: #f36363;
+    border-top: 2px solid transparent;
+    &:before {
+      content: '';
+      width: 70px;
+      height: 70px;
+      background: #f36363;
+      display: inline-block;
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 30px;
+      margin: auto;
+      transform: rotate(45deg);
+      border: 4px solid #e65454;
+    }
+    &:after {
+      content: '';
+      width: 70px;
+      height: 70px;
+      background: #f36363;
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -45px;
+      margin: auto;
+      transform: rotate(45deg);
+      border: 4px solid #e65454;
+    }
+  }
+
+  .envelope__fold {
+    height: 25px;
+    width: 86px;
+    background: #f36363;
+    border: 4px solid #e65454;
+    display: block;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+  }
+
+  .paper-close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+#text1{
+  font-family: "Carattere", serif;
+  font-style: normal;
+  color: #34A65F;
+}
+
+  #text2{
+    font-family: "Carattere", serif;
+    font-style: normal;
+    color: #CC231E;
+    font-weight: bold;
+  }
+
+  #text3{
+    font-family: "Carattere", serif;
+    font-style: normal;
+    color: #CC231E;
+  }
+
+
+
+
+
+
+
+
+
+
+
+</style>
+
 <body>
+
+
+<div class="container">
+  <div class="form_area">
+    <h1 class="title">Die besten Eltern <br> der Welt müssen sich anmelden</h1>
+    <form action="">
+      <div class="form_group">
+        <label class="sub_title" for="mamaName">Mama</label>
+        <input id="mamaName" placeholder="Vorname" class="form_style" type="text">
+      </div>
+      <div class="form_group">
+        <label class="sub_title" for="papaName">Papa</label>
+        <input id="papaName" placeholder="Vorname" class="form_style" type="text">
+      </div>
+      <div class="form_group">
+        <label class="sub_title" for="password">Passwort</label>
+        <input id="password" placeholder="Passwort eingeben" class="form_style" type="password">
+      </div>
+      <div>
+        <button id="submitButton" class="btn" type="button" disabled>Anmelden</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Pop-up -->
+<div class="popup-overlay" id="popup" style="display: none;">
+  <div class="popup-content">
+    <h1 id="text1">Anmeldung erfolgreich!</h1>
+    <h2 id="text2">Frohe Weihnachten! Klickt auf den Button um eure Karte zu erhalten!</h2>
+    <h2 id="text3">Ho! Ho! Ho! </h2>
+    <button id="openLetter">Weiter</button>
+  </div>
+</div>
+
+<!-- Brief -->
+<div class="letter" style="display: none;">
+  <div class="envelope">
+    <div class="envelope-flap"></div>
+    <div class="envelope-paper"></div>
+    <div class="envelope-detail"></div>
+  </div>
+  <div class="paper">
+    <div class="paper-content">
+      <div class="paper-close">x</div>
+      Mama & Papa ich wünsche euch frohe Weihnachten. Ich habe euch so lieb und tut mir leid wenn ich manchmal anstregend bin. Ihr seit die besten Eltern der Welt und ich bin so dankbar das ihr immer für mich da seit. Hab euch lieb! <3</br></br></br>Euer Ben
+    </div>
+  </div>
+</div>
+
+<script>
+  const mamaNameInput = document.getElementById('mamaName');
+  const papaNameInput = document.getElementById('papaName');
+  const passwordInput = document.getElementById('password');
+  const submitButton = document.getElementById('submitButton');
+  const popup = document.getElementById('popup');
+  const openLetterButton = document.getElementById('openLetter');
+  const letter = document.querySelector('.letter');
+  const closePaperButton = document.querySelector('.paper-close');
+  const formContainer = document.querySelector('.container');
+
+
+
+  // Richtige Eingaben
+  const correctMamaName = 'Andrea';
+  const correctPapaName = 'Sascha';
+  const correctPassword = 'Habeuchlieb';
+
+  // Eingaben validieren
+  function validateInputs() {
+    if (
+            mamaNameInput.value === correctMamaName &&
+            papaNameInput.value === correctPapaName &&
+            passwordInput.value === correctPassword
+    ) {
+      submitButton.disabled = false;
+      submitButton.classList.add('active');
+    } else {
+      submitButton.disabled = true;
+      submitButton.classList.remove('active');
+    }
+  }
+
+  // Event Listener für Eingabeänderungen
+  mamaNameInput.addEventListener('input', validateInputs);
+  papaNameInput.addEventListener('input', validateInputs);
+  passwordInput.addEventListener('input', validateInputs);
+
+  // Event Listener für Anmelde-Button
+  submitButton.addEventListener('click', () => {
+    if (!submitButton.disabled) {
+      popup.style.display = 'flex';
+    }
+  });
+
+  // Event Listener für den Weiter-Button im Pop-up
+  openLetterButton.addEventListener('click', () => {
+    popup.style.display = 'none'; // Pop-up schließen
+    letter.style.display = 'block'; // Brief anzeigen
+    formContainer.style.display = 'none'; // Anmeldeformular ausblenden
+  });
+
+  // Event Listener für Brief-Interaktionen
+  document.querySelector('.envelope').addEventListener('click', function () {
+    if (letter.classList.contains('letter--open')) {
+      letter.classList.remove('letter--open');
+      letter.classList.add('letter--close');
+      setTimeout(function () {
+        letter.classList.remove('letter--close');
+      }, 600);
+    } else {
+      letter.classList.remove('letter--close');
+      letter.classList.add('letter--open');
+    }
+  });
+
+  // Event Listener für das Schließen des Briefs
+  closePaperButton.addEventListener('click', function () {
+    letter.classList.remove('letter--open');
+    letter.classList.add('letter--close');
+    setTimeout(function () {
+      letter.classList.remove('letter--close');
+    }, 600);
+  });
+
+
+
+
+</script>
 
 </body>
 </html>
